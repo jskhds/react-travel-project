@@ -60,6 +60,10 @@ export const Header: React.FC = () => {
       <Input.Search
         placeholder={"请输入目的地、主题、或关键字"}
         className={styles["search-input"]}
+        onSearch = { (keyword) =>{
+          navigate("/search/" + keyword)
+        }
+           }
       />
     </Layout.Header>
 

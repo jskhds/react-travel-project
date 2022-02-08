@@ -51,9 +51,6 @@ export const productDetailSlice = createSlice({
     name: 'productDetail',
     initialState,
     reducers: {
-     
-
-
     },
     extraReducers: {
        // 情况1. 请求开始

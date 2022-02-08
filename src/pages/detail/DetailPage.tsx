@@ -26,7 +26,6 @@ export const DetailPage: React.FC = (): JSX.Element => {
   useEffect(() => {
     const fetchData = async () => {
       dispatch(getProductDetail(touristRouteId))
-
     }
     fetchData()
   }, [])
