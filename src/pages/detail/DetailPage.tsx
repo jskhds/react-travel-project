@@ -9,7 +9,8 @@ import { DatePicker } from 'antd';
 import { commentMockData } from "./mockup"
 import { useSelector } from "../../redux/hooks";
 import { useDispatch } from "react-redux";
-import { productDetailSlice } from "../../redux/productDetail/slice"
+import { productDetailSlice, getProductDetail} from "../../redux/productDetail/slice"
+
 const { RangePicker } = DatePicker;
 
 export const DetailPage: React.FC = (): JSX.Element => {
@@ -24,17 +25,7 @@ export const DetailPage: React.FC = (): JSX.Element => {
   const dispatch = useDispatch()
   useEffect(() => {
     const fetchData = async () => {
-      // action 和 reducer 都从 productDetailSlice 中来
-      dispatch(productDetailSlice.actions.fetchStart())
-      try {
-        const { data } = await axios.get(
-          `http://123.56.149.216:8089/api/touristRoutes/${touristRouteId}`
-        )
-        dispatch(productDetailSlice.actions.fetchSuccess(data))
-
-      } catch (error) {
-        dispatch(productDetailSlice.actions.fetchFail(error.message))
-      }
+      dispatch(getProductDetail(touristRouteId))
 
     }
     fetchData()

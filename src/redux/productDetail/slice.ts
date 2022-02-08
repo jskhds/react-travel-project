@@ -1,18 +1,28 @@
 // slice 结合了 action 和 reducer
 
-import { createSlice ,PayloadAction} from "@reduxjs/toolkit"
-
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit"
+import axios from "axios"
 interface ProductDetailState {
-    loading: boolean;
-    error: string | null;
-    data: any
+  loading: boolean;
+  error: string | null;
+  data: any
 }
 
 const initialState: ProductDetailState = {
-    loading: true,
-    error: null,
-    data: null
+  loading: true,
+  error: null,
+  data: null
 }
+
+// 用 createAsyncThunk 创建 thunkAction 处理异步请求
+export const getProductDetail = createAsyncThunk(
+  "productDetail/getProductDetail",
+  async (touristRouteId: string, thunkAPI) => {
+    const { data } = await axios.get(
+      `http://123.56.149.216:8089/api/touristRoutes/${touristRouteId}`
+    )
+    return data // return 的 data 是一个 promise
+  })
 /**
  * 格式
  * const counterSlice = createSlice({
@@ -35,28 +45,32 @@ const initialState: ProductDetailState = {
   },
 })
  */
+
+//如果用 createAsyncThunk 来处理 reducer的话，要用  extraReducers
 export const productDetailSlice = createSlice({
     name: 'productDetail',
     initialState,
     reducers: {
-        // 情况1. 请求开始
-        fetchStart: (state)=>{
-            // return {...state, loading: true}
-            state.loading = true;
-        },
-        // 情况2 请求成功
-        fetchSuccess: (state,action ) =>{
-            
-            state.data = action.payload;
-            state.loading = false;
-            state.error = null
-        },
-        // 情况3 请求失败
-        fetchFail: (state, action: PayloadAction<string | null>)=>{
-            state.loading = false;
-            state.error = action.payload;
-        }
+     
 
 
+    },
+    extraReducers: {
+       // 情况1. 请求开始
+       [getProductDetail.pending.type]: (state) => {
+        // return {...state, loading: true}
+        state.loading = true;
+      },
+      // 情况2 请求成功
+      [getProductDetail.fulfilled.type]: (state, action) => {
+        state.data = action.payload;
+        state.loading = false;
+        state.error = null
+      },
+      // 情况3 请求失败
+      [getProductDetail.rejected.type]: (state, action: PayloadAction<string | null>) => {
+        state.loading = false;
+        state.error = action.payload;
+      }
     }
-})
+  })

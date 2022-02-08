@@ -1,46 +1,262 @@
-# Getting Started with Create React App
+项目配置流程
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```
+npx create-react-app react-travel --template typescript
+cd react-travel
+npm install typescript-plugin-css-modules --save-dev  // 不参与最终发布，所以保存在 dev 中
+```
 
-## Available Scripts
+在原生项目上的配置文件修改
 
-In the project directory, you can run:
+.vscode  （根目录下）
 
-### `npm start`
+custom.d.ts （src 目录下）
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+tsconfig.json （添加配置）
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+将 App.css rename 为 App.module.css 模块化加载 CSS
 
-### `npm run build`
+将 CSS 引入改成以下类型并修改 className
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+eg
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```JSX
+import styles from './App.module.css';
+<img src={logo} className={styles['App-logo']}alt="logo" />
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### ant UI 安装 
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+antd 和 ant-design/icons
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+npm install antd @ant-design/icons
+// 导入
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+```
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### 文件结构组件化
+
+比如说 文件结构为
+
+![](./img/组件化.png)
+
+那么 footer 和 header 文件夹中 index.tsx 分别导出
+
+```
+export * from './Footer'
+```
+
+```
+export * from './Header'
+```
+
+components 文件夹中 index.tsx 导出文件夹
+
+```
+export * from './footer'
+export * from './header'
+```
+
+那么我们在引用 Header 和 Footer 组件时
+
+```
+import { Header, Footer } from './components'
+```
+
+#### 路由
+
+```
+npm install react-router-dom
+```
+
+```
+// 安装 typescript 类型定义
+npm install @types/react-router-dom --save-dev
+```
+
+路由配置 5 和 6 有很多区别
+
+https://blog.csdn.net/u010821983/article/details/121283039
+
+```JSX
+import { BrowserRouter, Route ,Routes} from "react-router-dom";
+import { HomePage } from "./pages";
+// <BrowserRouter>  为了路由导航与原生浏览器操作行为一致
+function App() {
+  return (
+    <div>
+      <BrowserRouter> 
+      <Routes>  
+        <Route path= "/" element={ <HomePage/>}></Route>
+      </Routes>
+      </BrowserRouter>
+    </div>
+  );
+}
+```
+
+#### redux
+
+##### 功能 
+
+动态生成语言栏下拉菜单
+
+##### 基本配置
+
+src→redux 文件夹，按照功能模块来划分 action 和 reducer
+
+store.tsx
+
+languageReducer.tsx
+
+Action Creator （工厂模式），避免在 action.type 的 case 中直接输入字符串，以免输错
+
+
+
+##### react-redux
+
+安装
+
+```
+npm install @types/react-redux --save-dev
+// 如果之后报错 Can‘t resolve ‘redux‘ in "paths" 的话
+npm install --save redux react-redux
+```
+
+在 index.tsx 中引入  Provider 和 store
+
+```
+import { Provider } from "react-redux"
+import  store  from "./redux/store"
+```
+
+在 src → redux 下有 language 文件夹和 hooks.ts 以及 store.ts
+
+1. store.ts 创建 store 并且定义  type RootState，是 store.getState() 的返回值，即动态对应 state.xxx 的类型
+
+2. hooks.ts 重写 react-redux 中的 useSelector 函数。 因为我们在组件中引用 state 时需要知道 state的类型，如果我们直接定义 state 的类型为 RootState 会造成二者耦合，不利于复用。所以我们把 RootState 通过 TypedUseSelectorHook 赋给 useSelector，让 useSelector 里面包含 state 定义
+
+3. language 文件夹包含修改语言的 action 和 reducer
+
+   对于languageActions.ts ：
+
+   1.里面先把我们要传入的 action 名称定义为常量，这样我们在使用的时候不会因为打错了等造成代码出错； 
+
+   2.定义了 action 的接口，比如更改语言的 action
+
+   ```
+   interface ChangeLanguageAction {
+       type: typeof CHANGE_LANGUAGE,
+       payload: "zh" | "en"
+   }
+   ```
+
+   有的时候，我们可能会写错type payload 或者漏写，所以这样定义以后这样我们外部引用的时候不易出错并且可以联想提示；
+
+   3.用 ActionCreator （工厂模式）把 action 提取出来，我们在使用的时候（dispatch时）直接调用函数，规范 action
+
+   ```
+   export const changeLanguageActionCreator = (languageCode: "zh" | "en"): ChangeLanguageAction => {
+       return {
+           type: CHANGE_LANGUAGE,
+           payload: languageCode
+       }
+   }
+   dispatch(addLanguageActionCreator("新语言","new_lang"))
+   ```
+
+   对于 languageReducer ，比较简单。定义 LanguageState 类型，初始化一个 state，传入 reducer 中，不同的 action.type 不同的逻辑来更新和 subscribe。其中更改语言，i18n 提供了接口，直接使用即可（会有副作用，不符合纯函数）
+
+- 定义 
+
+react-redux 的一些 hooks
+
+```
+// 获得数据  
+import { useSelector } from 'react-redux';
+// dispatch 
+import { useDispatch  } from 'react-redux';
+```
+
+##### 国际化 i18n
+
+i18n 
+
+```
+npm install react-i18next i18next --save
+```
+
+i18n 配置
+
+```
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+
+import translation_en from "./en.json";
+import translation_zh from "./zh.json";
+
+const resources = {
+  en: {
+    translation: translation_en,
+  },
+  zh: {
+    translation: translation_zh,
+  },
+};
+
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources,
+    lng: "zh",
+    // keySeparator: false, // we do not use keys in form messages.welcome
+    // header.slogan
+    interpolation: {
+      escapeValue: false, // react already safes from xss
+    },
+  });
+
+export default i18n;
+
+```
+
+在主页引入即可
+
+```
+import './i18n/configs'
+```
+
+
+
+#### redux 中间件
+
+redux-thunk 处理 api 请求数据
+
+```
+npm install redux-thunk
+```
+
+```
+import { applyMiddleware } from "redux";
+import thunk from "redux-thunk"
+```
+
+#### redux-toolkit 
+
+处理封装冗余的模板代码
+
+#### react 处理 html 字符串
+
+`dangerouslySetInnerHTML={{__html: 'html字符串'}}`
+
+#### RTK
+
+在 redux 中的 productDetail 文件夹使用的是 RTK 
