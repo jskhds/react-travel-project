@@ -1,0 +1,8 @@
+.slider {
+    text-align: center;
+    height: 250px;
+    line-height: 250px;
+    background-color: #364d79;
+    /* overflow: hidden; 图片多出来的高度隐藏 */
+    overflow: hidden;
+}
