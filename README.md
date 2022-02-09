@@ -271,3 +271,16 @@ jwt 解码插件
 npm install jwt-decode
 ```
 
+
+
+#### redux-persist 登录持久化
+
+```
+npm installredux-persist
+```
+
+网站的数据保存有三种方式：Cookie、Session、以及 Web Storage，采用 web storage
+
+优势: 降低网络流量，一旦数据保存在本地以后就可以避免向服务器再次发送请求；快速显示数据；可以被用作临时储存
+
+类型： SessionStorage ：仅在当前浏览器窗口关闭之前有效；localStorage：始终有效，窗口或者浏览器关闭也一直保存
