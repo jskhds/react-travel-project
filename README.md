@@ -265,3 +265,9 @@ import thunk from "redux-thunk"
 
 #### 单点登录 JWT
 
+jwt 解码插件
+
+```
+npm install jwt-decode
+```
+
