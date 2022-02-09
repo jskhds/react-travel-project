@@ -1,0 +1,8 @@
+/* 主页内容样式 */
+.page-content {
+    width: 80%;
+    /* 左右 auto 让页面居中 */
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 75vh;
+  }

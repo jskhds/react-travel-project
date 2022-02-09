@@ -7,7 +7,7 @@ import sideImage3 from "../../assets/images/sider_2019_02-04-2.png";
 import styles from "./HomePage.module.css";
 import { useTranslation } from "react-i18next"
 import { useEffect} from "react";
-import axios from "axios";
+import { MainLayout } from "../../layouts/mainLayout"
 import {
    giveMeDataActionCreator
 } from "../../redux/recommendProducts/recommendProductsActions";
@@ -42,9 +42,11 @@ export const HomePage: React.FC = () => {
   }
   return (
     <>
-      <Header />
+     <MainLayout>
+
+     
       {/* 页面内容 content */}
-      <div className={styles["page-content"]}>
+       
         <Row style={{ marginTop: 20 }}>
           <Col span={6}>
             <SideMenu />
@@ -81,8 +83,8 @@ export const HomePage: React.FC = () => {
           products={productList[2].touristRoutes}
         />
         <BusinessPartners />
-      </div>
-      <Footer />
+        </MainLayout>
+      
     </>
   );
 }
