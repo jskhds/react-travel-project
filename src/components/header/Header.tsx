@@ -26,6 +26,9 @@ export const Header: React.FC = () => {
   const dispatch = useDispatch();
   const jwt = useSelector((state) => state.user.token);
   const [username, setUsername] = useState("");
+  const  ShoppingCartItems = useSelector( state => state.shoppingCart.items)
+  const shoppingCartLoading = useSelector( s => s.shoppingCart.loading)
+
   // 登录成功后更新用户名
   useEffect(() => {
     if (jwt) {
@@ -75,7 +78,13 @@ export const Header: React.FC = () => {
                 {t("header.welcome")}
                 <Typography.Text>{username}</Typography.Text>
               </span>
-              <Button>{t("header.shoppingCart")}</Button>
+              {/* 购物车按钮 */}
+              <Button 
+              loading={shoppingCartLoading}
+              onClick={()=> navigate("/shoppingCart")}>
+                {t("header.shoppingCart")}({ShoppingCartItems.length})
+                </Button>
+              {/* 登出按钮 */}
               <Button onClick={onLogout}>{t("header.signOut")}</Button>
             </Button.Group>
           ) : (

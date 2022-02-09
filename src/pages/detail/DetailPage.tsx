@@ -10,7 +10,8 @@ import {
   ProductIntro,
   ProductComments,
 } from "../../components";
-import { DatePicker } from "antd";
+import { DatePicker, Button, Space } from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons"
 import { commentMockData } from "./mockup";
 import { useSelector } from "../../redux/hooks";
 import { useDispatch } from "react-redux";
@@ -19,18 +20,21 @@ import {
   getProductDetail,
 } from "../../redux/productDetail/slice";
 import { MainLayout } from "../../layouts";
+import { addShoppingCartItem } from "../../redux/shoppingCart/slice"
+
 const { RangePicker } = DatePicker;
 
 export const DetailPage: React.FC = (): JSX.Element => {
   const { touristRouteId } = useParams();
-
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [product, setProduct] = useState<any>(null);
-  // const [error, setError] = useState<string | null>(null);
   const loading = useSelector((state) => state.productDetail.loading);
   const error = useSelector((state) => state.productDetail.error);
   const product = useSelector((state) => state.productDetail.data);
+
   const dispatch = useDispatch();
+
+  const jwt = useSelector(s => s.user.token) as string
+  const shoppingCartLoading = useSelector(s => s.shoppingCart.loading)
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch(getProductDetail(touristRouteId));
@@ -75,6 +79,22 @@ export const DetailPage: React.FC = (): JSX.Element => {
               />
             </Col>
             <Col span={11}>
+              {/* 购物车按钮 */}
+              <Button
+              style={{ marginTop: 50, marginBottom: 30, display: "block" }}
+              type="primary"
+              danger
+              // 和 header 里面的 购物车 button loading 状态连接在一起才不会一直转圈，为什么？
+              loading={shoppingCartLoading}
+              onClick={() => {
+                dispatch(
+                  addShoppingCartItem({ jwt, touristRouteId: product.id })
+                );
+              }}
+            >
+                <ShoppingCartOutlined />
+                添加商品
+              </Button>
               <RangePicker open style={{ marginTop: 20 }} />
             </Col>
           </Row>

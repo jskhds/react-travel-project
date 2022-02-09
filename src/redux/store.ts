@@ -9,6 +9,7 @@ import { productSearchSlice } from "./productSearch/slice"
 import { UserSlice } from "./user/slice"
 import { persistStore, persistReducer } from "redux-persist"
 import storage from "redux-persist/lib/storage";
+import { shoppingCartSlice } from "./shoppingCart/slice"
 
 // 配置 redux 持久信息，一般起名叫 persistConfig
 const persistConfig = {
@@ -28,7 +29,8 @@ const rootReducer = combineReducers({
     recommendProducts: recommendProductsReducer,
     productDetail: productDetailSlice.reducer,
     productSearch: productSearchSlice.reducer,
-    user: UserSlice.reducer
+    user: UserSlice.reducer,
+    shoppingCart: shoppingCartSlice.reducer
 })
 
 
