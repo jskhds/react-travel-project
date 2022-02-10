@@ -10,7 +10,7 @@ import { UserSlice } from "./user/slice"
 import { persistStore, persistReducer } from "redux-persist"
 import storage from "redux-persist/lib/storage";
 import { shoppingCartSlice } from "./shoppingCart/slice"
-
+import { orderSlice } from "../redux/order/slice"
 // 配置 redux 持久信息，一般起名叫 persistConfig
 const persistConfig = {
     key: " root ",
@@ -30,7 +30,8 @@ const rootReducer = combineReducers({
     productDetail: productDetailSlice.reducer,
     productSearch: productSearchSlice.reducer,
     user: UserSlice.reducer,
-    shoppingCart: shoppingCartSlice.reducer
+    shoppingCart: shoppingCartSlice.reducer,
+    order: orderSlice.reducer
 })
 
 

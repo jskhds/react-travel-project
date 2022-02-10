@@ -7,6 +7,7 @@ import {
   RegisterPage,
   DetailPage,
   SearchPage,
+  PlaceOrderPage
 } from "./pages";
 import { useSelector } from "./redux/hooks";
 import { ShoppingCart } from "./pages/shoppingCart";
@@ -55,10 +56,17 @@ function App() {
             <Route path="" element={<SearchPage />} />
             <Route path=":keywords" element={<SearchPage />} />
           </Route>
+
           <Route
 
             path="/shoppingCart"
             element={< ShoppingCart />} />
+
+          <Route
+
+            path="/placeOrder"
+            element={< PlaceOrderPage/>} />
+
           <Route path="*" element={<h1>404 Not Found! 页面去火星了</h1>} />
         </Routes>
       </BrowserRouter>

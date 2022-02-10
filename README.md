@@ -284,3 +284,12 @@ npm installredux-persist
 优势: 降低网络流量，一旦数据保存在本地以后就可以避免向服务器再次发送请求；快速显示数据；可以被用作临时储存
 
 类型： SessionStorage ：仅在当前浏览器窗口关闭之前有效；localStorage：始终有效，窗口或者浏览器关闭也一直保存
+
+#### 订单页面
+
+paymentForm 插件处理信用卡样式
+
+```
+npm install react-credit-c
+```
+
