@@ -2,6 +2,7 @@
   "name": "react-travel",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@reduxjs/toolkit": "^1.7.2",
@@ -58,4 +59,5 @@
     "@types/react-router-dom": "^5.3.3",
     "typescript-plugin-css-modules": "^3.4.0"
   }
+  
 }
